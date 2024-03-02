@@ -662,6 +662,17 @@ const nodeConverters: ((position: number, buffer: Uint32Array, readString: ReadS
 			attributes
 		};
 	},
+	function jsxText(position, buffer, readString): JsxTextNode {
+		const start = buffer[position++];
+		const end = buffer[position++];
+		const value = convertString(position, buffer, readString);
+		return {
+			type: 'JsxText',
+			start,
+			end,
+			value
+		};
+	},
 	function labeledStatement(position, buffer, readString): LabeledStatementNode {
 		const start = buffer[position++];
 		const end = buffer[position++];
@@ -1253,6 +1264,7 @@ export type ImportSpecifierNode = RollupAstNode<estree.ImportSpecifier>;
 export type JsxElementNode = RollupAstNode<any>;
 export type JsxIdentifierNode = RollupAstNode<any>;
 export type JsxOpeningElementNode = RollupAstNode<any>;
+export type JsxTextNode = RollupAstNode<any>;
 export type LabeledStatementNode = RollupAstNode<estree.LabeledStatement>;
 export type LiteralBigIntNode = RollupAstNode<estree.BigIntLiteral>;
 export type LiteralBooleanNode = RollupAstNode<estree.SimpleLiteral & { value: boolean }>;
