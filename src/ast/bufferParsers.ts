@@ -48,6 +48,8 @@ import ImportNamespaceSpecifier from './nodes/ImportNamespaceSpecifier';
 import ImportSpecifier from './nodes/ImportSpecifier';
 import JsxAttribute from './nodes/JsxAttribute';
 import JsxElement from './nodes/JsxElement';
+import JsxEmptyExpr from './nodes/JsxEmptyExpr';
+import JsxExprContainer from './nodes/JsxExprContainer';
 import JsxIdentifier from './nodes/JsxIdentifier';
 import JsxOpeningElement from './nodes/JsxOpeningElement';
 import JsxText from './nodes/JsxText';
@@ -151,6 +153,8 @@ const nodeTypeStrings = [
 	'ImportSpecifier',
 	'JsxAttribute',
 	'JsxElement',
+	'JsxEmptyExpr',
+	'JsxExprContainer',
 	'JsxIdentifier',
 	'JsxOpeningElement',
 	'JsxText',
@@ -238,6 +242,8 @@ const nodeConstructors: (typeof NodeBase)[] = [
 	ImportSpecifier,
 	JsxAttribute,
 	JsxElement,
+	JsxEmptyExpr,
+	JsxExprContainer,
 	JsxIdentifier,
 	JsxOpeningElement,
 	JsxText,
@@ -636,6 +642,11 @@ const bufferParsers: ((
 				: convertNode(node, scope, closingElementPosition, buffer, readString);
 		node.children = convertNodeList(node, scope, buffer[position + 1], buffer, readString);
 		node.openingElement = convertNode(node, scope, position + 2, buffer, readString);
+	},
+	function jsxEmptyExpr() {},
+	function jsxExprContainer(node: JsxExprContainer, position, buffer, readString) {
+		const { scope } = node;
+		node.expression = convertNode(node, scope, position, buffer, readString);
 	},
 	function jsxIdentifier(node: JsxIdentifier, position, buffer, readString) {
 		node.name = convertString(position, buffer, readString);
