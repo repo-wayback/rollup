@@ -246,7 +246,9 @@ export const AST_NODES = {
 		}
 	},
 	ExpressionStatement: {
-		fields: [['expression', 'Node']]
+		fields: [
+			['expression', 'Node']
+		]
 	},
 	ForInStatement: {
 		fields: [
@@ -312,7 +314,10 @@ export const AST_NODES = {
 		}
 	},
 	Identifier: {
-		fields: [['name', 'String']]
+		fields: [
+			['name', 'String'],
+			['typeAnnotation', 'Node']
+		]
 	},
 	IfStatement: {
 		fields: [
@@ -588,6 +593,12 @@ export const AST_NODES = {
 			['handler', 'OptionalNode'],
 			['finalizer', 'OptionalNode']
 		]
+	},
+	TSNumberKeyword: {
+		fields: []
+	},
+	TSTypeAnnotation: {
+		fields: [['typeAnnotation', 'Node']]
 	},
 	UnaryExpression: {
 		fields: [

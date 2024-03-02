@@ -69,6 +69,8 @@ import StaticBlock from './nodes/StaticBlock';
 import Super from './nodes/Super';
 import SwitchCase from './nodes/SwitchCase';
 import SwitchStatement from './nodes/SwitchStatement';
+import TSNumberKeyword from './nodes/TSNumberKeyword';
+import TSTypeAnnotation from './nodes/TSTypeAnnotation';
 import TaggedTemplateExpression from './nodes/TaggedTemplateExpression';
 import TemplateElement from './nodes/TemplateElement';
 import TemplateLiteral from './nodes/TemplateLiteral';
@@ -176,6 +178,8 @@ const nodeTypeStrings = [
 	'ThisExpression',
 	'ThrowStatement',
 	'TryStatement',
+	'TSNumberKeyword',
+	'TSTypeAnnotation',
 	'UnaryExpression',
 	'UpdateExpression',
 	'VariableDeclaration',
@@ -258,6 +262,8 @@ const nodeConstructors: (typeof NodeBase)[] = [
 	ThisExpression,
 	ThrowStatement,
 	TryStatement,
+	TSNumberKeyword,
+	TSTypeAnnotation,
 	UnaryExpression,
 	UpdateExpression,
 	VariableDeclaration,
@@ -548,7 +554,9 @@ const bufferParsers: ((
 		node.annotationNoSideEffects = annotations.some(comment => comment.type === 'noSideEffects');
 	},
 	function identifier(node: Identifier, position, buffer, readString) {
-		node.name = convertString(position, buffer, readString);
+		const { scope } = node;
+		node.typeAnnotation = convertNode(node, scope, buffer[position], buffer, readString);
+		node.name = convertString(position + 1, buffer, readString);
 	},
 	function ifStatement(node: IfStatement, position, buffer, readString) {
 		const { scope } = node;
@@ -787,6 +795,11 @@ const bufferParsers: ((
 				? null
 				: convertNode(node, scope, finalizerPosition, buffer, readString);
 		node.block = convertNode(node, scope, position + 2, buffer, readString);
+	},
+	function tSNumberKeyword() {},
+	function tSTypeAnnotation(node: TSTypeAnnotation, position, buffer, readString) {
+		const { scope } = node;
+		node.typeAnnotation = convertNode(node, scope, position, buffer, readString);
 	},
 	function unaryExpression(node: UnaryExpression, position, buffer, readString) {
 		const { scope } = node;
