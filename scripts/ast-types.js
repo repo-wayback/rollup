@@ -312,9 +312,10 @@ export const AST_NODES = {
 		}
 	},
 	Identifier: {
+		estreeType: 'estree.Identifier & { typeAnnotation: any }',
 		fields: [
 			['name', 'String'],
-			['typeAnnotation', 'Node']
+			['typeAnnotation', 'OptionalNode']
 		]
 	},
 	IfStatement: {
@@ -595,9 +596,11 @@ export const AST_NODES = {
 	TSInterfaceBody: { fields: [['body', 'NodeList']] },
 	TSInterfaceDeclaration: { fields: [['body', 'Node']] },
 	TSNumberKeyword: {
+		estreeType: 'any',
 		fields: []
 	},
 	TSTypeAnnotation: {
+		estreeType: 'any',
 		fields: [['typeAnnotation', 'Node']]
 	},
 	UnaryExpression: {

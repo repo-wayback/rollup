@@ -561,7 +561,11 @@ const bufferParsers: ((
 	},
 	function identifier(node: Identifier, position, buffer, readString) {
 		const { scope } = node;
-		node.typeAnnotation = convertNode(node, scope, buffer[position], buffer, readString);
+		const typeAnnotationPosition = buffer[position];
+		node.typeAnnotation =
+			typeAnnotationPosition === 0
+				? null
+				: convertNode(node, scope, typeAnnotationPosition, buffer, readString);
 		node.name = convertString(position + 1, buffer, readString);
 	},
 	function ifStatement(node: IfStatement, position, buffer, readString) {
