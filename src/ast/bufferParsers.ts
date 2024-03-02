@@ -47,11 +47,14 @@ import ImportExpression from './nodes/ImportExpression';
 import ImportNamespaceSpecifier from './nodes/ImportNamespaceSpecifier';
 import ImportSpecifier from './nodes/ImportSpecifier';
 import JsxAttribute from './nodes/JsxAttribute';
+import JsxClosingFragment from './nodes/JsxClosingFragment';
 import JsxElement from './nodes/JsxElement';
 import JsxEmptyExpr from './nodes/JsxEmptyExpr';
 import JsxExprContainer from './nodes/JsxExprContainer';
+import JsxFragment from './nodes/JsxFragment';
 import JsxIdentifier from './nodes/JsxIdentifier';
 import JsxOpeningElement from './nodes/JsxOpeningElement';
+import JsxOpeningFragment from './nodes/JsxOpeningFragment';
 import JsxText from './nodes/JsxText';
 import LabeledStatement from './nodes/LabeledStatement';
 import Literal from './nodes/Literal';
@@ -152,11 +155,14 @@ const nodeTypeStrings = [
 	'ImportNamespaceSpecifier',
 	'ImportSpecifier',
 	'JsxAttribute',
+	'JsxClosingFragment',
 	'JsxElement',
+	'JsxFragment',
 	'JsxEmptyExpr',
 	'JsxExprContainer',
 	'JsxIdentifier',
 	'JsxOpeningElement',
+	'JsxOpeningFragment',
 	'JsxText',
 	'LabeledStatement',
 	'Literal',
@@ -241,11 +247,14 @@ const nodeConstructors: (typeof NodeBase)[] = [
 	ImportNamespaceSpecifier,
 	ImportSpecifier,
 	JsxAttribute,
+	JsxClosingFragment,
 	JsxElement,
+	JsxFragment,
 	JsxEmptyExpr,
 	JsxExprContainer,
 	JsxIdentifier,
 	JsxOpeningElement,
+	JsxOpeningFragment,
 	JsxText,
 	LabeledStatement,
 	Literal,
@@ -633,6 +642,7 @@ const bufferParsers: ((
 		const { scope } = node;
 		node.name = convertNode(node, scope, position, buffer, readString);
 	},
+	function jsxClosingFragment() {},
 	function jsxElement(node: JsxElement, position, buffer, readString) {
 		const { scope } = node;
 		const closingElementPosition = buffer[position];
@@ -642,6 +652,12 @@ const bufferParsers: ((
 				: convertNode(node, scope, closingElementPosition, buffer, readString);
 		node.children = convertNodeList(node, scope, buffer[position + 1], buffer, readString);
 		node.openingElement = convertNode(node, scope, position + 2, buffer, readString);
+	},
+	function jsxFragment(node: JsxFragment, position, buffer, readString) {
+		const { scope } = node;
+		node.closingFragment = convertNode(node, scope, buffer[position], buffer, readString);
+		node.children = convertNodeList(node, scope, buffer[position + 1], buffer, readString);
+		node.openingFragment = convertNode(node, scope, position + 2, buffer, readString);
 	},
 	function jsxEmptyExpr() {},
 	function jsxExprContainer(node: JsxExprContainer, position, buffer, readString) {
@@ -658,6 +674,7 @@ const bufferParsers: ((
 		node.attributes = convertNodeList(node, scope, buffer[position + 1], buffer, readString);
 		node.name = convertNode(node, scope, position + 2, buffer, readString);
 	},
+	function jsxOpeningFragment() {},
 	function jsxText(node: JsxText, position, buffer, readString) {
 		node.value = convertString(position, buffer, readString);
 	},

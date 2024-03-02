@@ -629,6 +629,15 @@ const nodeConverters: ((position: number, buffer: Uint32Array, readString: ReadS
 			name
 		};
 	},
+	function jsxClosingFragment(position, buffer): JsxClosingFragmentNode {
+		const start = buffer[position++];
+		const end = buffer[position++];
+		return {
+			type: 'JsxClosingFragment',
+			start,
+			end
+		};
+	},
 	function jsxElement(position, buffer, readString): JsxElementNode {
 		const start = buffer[position++];
 		const end = buffer[position++];
@@ -643,6 +652,21 @@ const nodeConverters: ((position: number, buffer: Uint32Array, readString: ReadS
 			end,
 			openingElement,
 			closingElement,
+			children
+		};
+	},
+	function jsxFragment(position, buffer, readString): JsxFragmentNode {
+		const start = buffer[position++];
+		const end = buffer[position++];
+		const closingFragment = convertNode(buffer[position++], buffer, readString);
+		const children = convertNodeList(buffer[position++], buffer, readString);
+		const openingFragment = convertNode(position, buffer, readString);
+		return {
+			type: 'JsxFragment',
+			start,
+			end,
+			openingFragment,
+			closingFragment,
 			children
 		};
 	},
@@ -691,6 +715,15 @@ const nodeConverters: ((position: number, buffer: Uint32Array, readString: ReadS
 			selfClosing,
 			name,
 			attributes
+		};
+	},
+	function jsxOpeningFragment(position, buffer): JsxOpeningFragmentNode {
+		const start = buffer[position++];
+		const end = buffer[position++];
+		return {
+			type: 'JsxOpeningFragment',
+			start,
+			end
 		};
 	},
 	function jsxText(position, buffer, readString): JsxTextNode {
@@ -1293,11 +1326,14 @@ export type ImportExpressionNode = RollupAstNode<
 export type ImportNamespaceSpecifierNode = RollupAstNode<estree.ImportNamespaceSpecifier>;
 export type ImportSpecifierNode = RollupAstNode<estree.ImportSpecifier>;
 export type JsxAttributeNode = RollupAstNode<any>;
+export type JsxClosingFragmentNode = RollupAstNode<any>;
 export type JsxElementNode = RollupAstNode<any>;
+export type JsxFragmentNode = RollupAstNode<any>;
 export type JsxEmptyExprNode = RollupAstNode<any>;
 export type JsxExprContainerNode = RollupAstNode<any>;
 export type JsxIdentifierNode = RollupAstNode<any>;
 export type JsxOpeningElementNode = RollupAstNode<any>;
+export type JsxOpeningFragmentNode = RollupAstNode<any>;
 export type JsxTextNode = RollupAstNode<any>;
 export type LabeledStatementNode = RollupAstNode<estree.LabeledStatement>;
 export type LiteralBigIntNode = RollupAstNode<estree.BigIntLiteral>;
