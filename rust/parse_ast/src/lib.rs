@@ -9,7 +9,7 @@ use swc_common::{FileName, FilePathMapping, Globals, SourceMap, GLOBALS};
 use swc_compiler_base::parse_js;
 use swc_compiler_base::IsModule;
 use swc_ecma_ast::EsVersion;
-use swc_ecma_parser::{EsConfig, Syntax};
+use swc_ecma_parser::{EsConfig, Syntax, TsConfig};
 
 use crate::convert_ast::annotations::SequentialComments;
 
@@ -19,14 +19,24 @@ use error_emit::try_with_handler;
 
 mod error_emit;
 
-pub fn parse_ast(code: String, allow_return_outside_function: bool) -> Vec<u8> {
+pub fn parse_ast(code: String, allow_return_outside_function: bool, preserve_typescript: bool) -> Vec<u8> {
   let cm = Lrc::new(SourceMap::new(FilePathMapping::empty()));
   let target = EsVersion::EsNext;
-  let syntax = Syntax::Es(EsConfig {
-    allow_return_outside_function,
-    import_attributes: true,
-    ..Default::default()
-  });
+  let syntax= if preserve_typescript {
+    Syntax::Typescript(TsConfig {
+      tsx: false,
+      decorators: false,
+      dts: false,
+      no_early_errors: false,
+      ..Default::default()
+    })
+  } else {
+    Syntax::Es(EsConfig {
+      allow_return_outside_function,
+      import_attributes: true,
+      ..Default::default()
+    })
+  };
 
   let filename = FileName::Anon;
   let file = cm.new_source_file(filename, code);
