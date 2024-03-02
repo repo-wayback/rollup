@@ -44,6 +44,7 @@ const tdzVariableKinds = {
 export default class Identifier extends NodeBase implements PatternNode {
 	declare name: string;
 	declare type: NodeType.tIdentifier;
+	declare typeAnnotation: NodeType.tTSTypeAnnotation | null;
 	variable: Variable | null = null;
 
 	private get isTDZAccess(): boolean | null {
