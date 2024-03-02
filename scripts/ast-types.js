@@ -605,7 +605,10 @@ export const AST_NODES = {
 			['key', 'Node'],
 			['typeAnnotation', 'OptionalNode']
 		],
-		flags: ['computed', 'optional', 'readonly', 'static'],
+		flags: ['static', 'computed', 'optional', 'readonly'],
+		variableNames: {
+			static: 'isStatic'
+		}
 	},
 	TSTypeAnnotation: {
 		estreeType: 'any',
