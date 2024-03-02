@@ -1056,6 +1056,28 @@ const nodeConverters: ((position: number, buffer: Uint32Array, readString: ReadS
 			finalizer
 		};
 	},
+	function tSInterfaceBody(position, buffer, readString): TSInterfaceBodyNode {
+		const start = buffer[position++];
+		const end = buffer[position++];
+		const body = convertNodeList(position, buffer, readString);
+		return {
+			type: 'TSInterfaceBody',
+			start,
+			end,
+			body
+		};
+	},
+	function tSInterfaceDeclaration(position, buffer, readString): TSInterfaceDeclarationNode {
+		const start = buffer[position++];
+		const end = buffer[position++];
+		const body = convertNode(position, buffer, readString);
+		return {
+			type: 'TSInterfaceDeclaration',
+			start,
+			end,
+			body
+		};
+	},
 	function tSNumberKeyword(position, buffer): TSNumberKeywordNode {
 		const start = buffer[position++];
 		const end = buffer[position++];
@@ -1267,6 +1289,8 @@ export type TemplateLiteralNode = RollupAstNode<estree.TemplateLiteral>;
 export type ThisExpressionNode = RollupAstNode<estree.ThisExpression>;
 export type ThrowStatementNode = RollupAstNode<estree.ThrowStatement>;
 export type TryStatementNode = RollupAstNode<estree.TryStatement>;
+export type TSInterfaceBodyNode = RollupAstNode<estree.TSInterfaceBody>;
+export type TSInterfaceDeclarationNode = RollupAstNode<estree.TSInterfaceDeclaration>;
 export type TSNumberKeywordNode = RollupAstNode<estree.TSNumberKeyword>;
 export type TSTypeAnnotationNode = RollupAstNode<estree.TSTypeAnnotation>;
 export type UnaryExpressionNode = RollupAstNode<estree.UnaryExpression> & { prefix: true };
